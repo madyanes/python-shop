@@ -15,14 +15,17 @@ class Person:
         self.cart = []
 
     def buy(self, *product_list):
+        '''Purchasing process.'''
         print(f'{self.name} wants to buy {product_list}.')
         self.cart.extend(product_list)
         products = self.cart.copy()  # shallow copy
         for product in products:
             if product.stock <= 0:
+                # product with 0 stock in removed from the cart
                 print(f'{product} is currently unavailable.')
                 self.cart.remove(product)
                 continue
+            # calculate available products only
             product.stock -= 1
             self.money = self.money - product.price
     
@@ -46,4 +49,4 @@ print(vars(tolak_angin))  # {'name': 'Tolak Angin', 'stock': 0, 'price': 2500}
 print(vars(fanta))        # {'name': 'Fanta', 'stock': 9, 'price': 5000}
 print(vars(better))       # {'name': 'Better', 'stock': 10, 'price': 2000}
 
-print(vars(olive))
+print(vars(olive))  # {'name': 'Olivia', 'gender': 'woman', 'money': 5000, 'cart': [Fanta]}
