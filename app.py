@@ -15,8 +15,14 @@ class Person:
         self.cart = []
 
     def buy(self, *product_list):
+        print(f'{self.name} wants to buy {product_list}.')
         self.cart.extend(product_list)
-        for product in self.cart:
+        products = self.cart.copy()  # shallow copy
+        for product in products:
+            if product.stock <= 0:
+                print(f'{product} is currently unavailable.')
+                self.cart.remove(product)
+                continue
             product.stock -= 1
     
     def log(self):
@@ -25,7 +31,7 @@ class Person:
 #####################
 
 # Products
-tolak_angin = Product(name='Tolak Angin', stock=10, price=2500)
+tolak_angin = Product(name='Tolak Angin', stock=0, price=2500)
 fanta = Product(name='Fanta', stock=10, price=5000)
 better = Product(name='Better', stock=10, price=2000)
 
@@ -33,8 +39,8 @@ better = Product(name='Better', stock=10, price=2000)
 olive = Person(name='Olivia', gender='woman', money=10000)
 
 olive.buy(tolak_angin, fanta)
-olive.log()  # Olivia buys [Tolak Angin, Fanta].
+olive.log()  # Olivia buys [Fanta].
 
-print(vars(tolak_angin))  # {'name': 'Tolak Angin', 'stock': 9, 'price': 2500}
+print(vars(tolak_angin))  # {'name': 'Tolak Angin', 'stock': 0, 'price': 2500}
 print(vars(fanta))        # {'name': 'Fanta', 'stock': 9, 'price': 5000}
 print(vars(better))       # {'name': 'Better', 'stock': 10, 'price': 2000}
