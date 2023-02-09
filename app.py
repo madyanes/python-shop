@@ -24,6 +24,7 @@ class Person:
                 self.cart.remove(product)
                 continue
             product.stock -= 1
+            self.money = self.money - product.price
     
     def log(self):
         print(f'{self.name} buys {self.cart}.')
@@ -44,3 +45,5 @@ olive.log()  # Olivia buys [Fanta].
 print(vars(tolak_angin))  # {'name': 'Tolak Angin', 'stock': 0, 'price': 2500}
 print(vars(fanta))        # {'name': 'Fanta', 'stock': 9, 'price': 5000}
 print(vars(better))       # {'name': 'Better', 'stock': 10, 'price': 2000}
+
+print(vars(olive))
