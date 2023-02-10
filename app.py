@@ -10,7 +10,6 @@ class Product:
 class Person:
     def __init__(self, **kwargs):
         self.name = kwargs.setdefault('name', None)
-        self.gender = kwargs.setdefault('gender', None)
         self.money = kwargs.setdefault('money', 0)
         self.cart = []
 
@@ -21,16 +20,16 @@ class Person:
         products = self.cart.copy()  # shallow copy
         for product in products:
             if product.stock <= 0:
-                # product with 0 stock in removed from the cart
+                # product with 0 stock is removed from the cart
                 print(f'{product} is currently unavailable.')
                 self.cart.remove(product)
                 continue
             # calculate available products only
-            product.stock -= 1
+            product.stock = product.stock - 1
             self.money = self.money - product.price
     
     def log(self):
-        print(f'{self.name} buys {self.cart}.')
+        print(f'{self.name} buys {self.cart}')
 
 #####################
 
@@ -40,13 +39,9 @@ fanta = Product(name='Fanta', stock=10, price=5000)
 better = Product(name='Better', stock=10, price=2000)
 
 # People
-olive = Person(name='Olivia', gender='woman', money=10000)
+olive = Person(name='Olivia', money=10000)
 
 olive.buy(tolak_angin, fanta)
 olive.log()  # Olivia buys [Fanta].
 
-print(vars(tolak_angin))  # {'name': 'Tolak Angin', 'stock': 0, 'price': 2500}
-print(vars(fanta))        # {'name': 'Fanta', 'stock': 9, 'price': 5000}
-print(vars(better))       # {'name': 'Better', 'stock': 10, 'price': 2000}
-
-print(vars(olive))  # {'name': 'Olivia', 'gender': 'woman', 'money': 5000, 'cart': [Fanta]}
+print(vars(olive))  # {'name': 'Olivia', 'money': 5000, 'cart': [Fanta]}
