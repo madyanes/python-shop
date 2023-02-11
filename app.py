@@ -1,3 +1,5 @@
+import pdb
+
 class Product:
     def __init__(self, **kwargs):
         self.name = kwargs.setdefault('name', None)
@@ -8,10 +10,12 @@ class Product:
         return f'{self.name}'
 
 class Person:
+    cart = []
+    purchase_history = []
+    
     def __init__(self, **kwargs):
         self.name = kwargs.setdefault('name', None)
         self.money = kwargs.setdefault('money', 0)
-        self.cart = []
 
     def buy(self, *product_list):
         '''Purchasing process.'''
@@ -21,15 +25,27 @@ class Person:
         for product in products:
             if product.stock <= 0:
                 # product with 0 stock is removed from the cart
-                print(f'{product} is currently unavailable.')
+                print(f'{product} is currently unavailable. Removed from the cart.')
                 self.cart.remove(product)
                 continue
             # calculate available products only
             product.stock = product.stock - 1
-            self.money = self.money - product.price
+            if not self.charge(product): continue
+        self.log()
+    
+    def charge(self, product):
+        '''Is the money enough to buy?'''
+        if self.money <= 0 or (self.money - product.price) < 0:
+            self.cart.remove(product)
+            print(f'{self.name} does not have enough money to buy {product}. ==> (money = {self.money}, required = {[product.price]})')
+            return False
+        print(f'{self.name} purchased {product} successfully.')
+        self.money = self.money - product.price
+        self.purchase_history.append(product)
+        self.cart.remove(product)
     
     def log(self):
-        print(f'{self.name} buys {self.cart}')
+        print(f'{self.name} buys {self.purchase_history}')
 
 #####################
 
@@ -39,9 +55,13 @@ fanta = Product(name='Fanta', stock=10, price=5000)
 better = Product(name='Better', stock=10, price=2000)
 
 # People
-olive = Person(name='Olivia', money=10000)
+olive = Person(name='Olivia', money=5000)
 
-olive.buy(tolak_angin, fanta)
-olive.log()  # Olivia buys [Fanta].
+olive.buy(tolak_angin, fanta, better)
+# Olivia wants to buy (Tolak Angin, Fanta, Better).
+# Tolak Angin is currently unavailable. Removed from the cart.
+# Olivia purchased Fanta successfully.
+# Olivia does not have enough money to buy Better. ==> (money = 0, required = [2000])
+# Olivia buys [Fanta]
 
-print(vars(olive))  # {'name': 'Olivia', 'money': 5000, 'cart': [Fanta]}
+print(vars(olive))  # {'name': 'Olivia', 'money': 0}
