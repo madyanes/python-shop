@@ -30,18 +30,23 @@ class Person:
                 self.cart.remove(product)
                 continue
             # calculate available products only
-            product.stock = product.stock - 1
-            self.charge(product)
+            self.calc_product(product, product_list[products.index(product)]['qty'])
+            self.charge(product, product_list[products.index(product)]['qty'])
         self.log()
     
-    def charge(self, product):
+    def calc_product(self, product, qty):
+        '''Calculate the product'''
+        product.stock = product.stock - qty
+        return product
+    
+    def charge(self, product, qty):
         '''Is the money enough to buy?'''
-        if self.money <= 0 or (self.money - product.price) < 0:
+        if self.money <= 0 or (self.money - (product.price * qty)) < 0:
             self.cart.remove(product)
-            print(f'{self.name} does not have enough money to buy {product}. ==> (money = {self.money}, required = {[product.price]})')
+            print(f'{self.name} does not have enough money to buy {qty} {product}. ==> (money = {self.money}, qty = {qty}, required = {[product.price * qty]})')
             return False
-        print(f'{self.name} purchased {product} successfully.')
-        self.money = self.money - product.price
+        print(f'{self.name} purchased {qty} {product} successfully.')
+        self.money = self.money - (product.price * qty)
         self.purchase_history.append(product)
         self.cart.remove(product)
     
@@ -56,8 +61,13 @@ fanta = Product(name='Fanta', stock=10, price=5000)
 better = Product(name='Better', stock=10, price=2000)
 
 # People
-olive = Person(name='Olivia', money=50000)
+olive = Person(name='Olivia', money=11000)
 
 olive.buy({'product': tolak_angin, 'qty': 1}, {'product': fanta, 'qty': 2}, {'product': better, 'qty': 1})
+# Olivia wants to buy [Tolak Angin, Fanta, Better].
+# Tolak Angin is currently unavailable. Removed from the cart.
+# Olivia purchased 2 Fanta successfully.
+# Olivia does not have enough money to buy 1 Better. ==> (money = 1000, qty = 1, required = [2000])
+# Olivia buys [Fanta]
 
-print(vars(olive))  # {'name': 'Olivia', 'money': 43000}
+print(vars(olive))  # {'name': 'Olivia', 'money': 1000}
