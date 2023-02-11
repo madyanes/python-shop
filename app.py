@@ -19,8 +19,9 @@ class Person:
 
     def buy(self, *product_list):
         '''Purchasing process.'''
-        print(f'{self.name} wants to buy {product_list}.')
-        self.cart.extend(product_list)
+        products_obj = [product['product'] for product in product_list]  # get `product` only from a tuple of dictionary
+        print(f'{self.name} wants to buy {products_obj}.')
+        self.cart.extend(products_obj)
         products = self.cart.copy()  # shallow copy
         for product in products:
             if product.stock <= 0:
@@ -55,13 +56,8 @@ fanta = Product(name='Fanta', stock=10, price=5000)
 better = Product(name='Better', stock=10, price=2000)
 
 # People
-olive = Person(name='Olivia', money=5000)
+olive = Person(name='Olivia', money=50000)
 
-olive.buy(tolak_angin, fanta, better)
-# Olivia wants to buy (Tolak Angin, Fanta, Better).
-# Tolak Angin is currently unavailable. Removed from the cart.
-# Olivia purchased Fanta successfully.
-# Olivia does not have enough money to buy Better. ==> (money = 0, required = [2000])
-# Olivia buys [Fanta]
+olive.buy({'product': tolak_angin, 'qty': 1}, {'product': fanta, 'qty': 2}, {'product': better, 'qty': 1})
 
-print(vars(olive))  # {'name': 'Olivia', 'money': 0}
+print(vars(olive))  # {'name': 'Olivia', 'money': 43000}
