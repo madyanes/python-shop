@@ -24,14 +24,14 @@ class Person:
         self.cart.extend(products_obj)
         products = self.cart.copy()  # shallow copy
         for product in products:
-            # calculate available products only
-            if not self.calc_product(product, product_list[products.index(product)]['qty']): continue
-            self.charge(product, product_list[products.index(product)]['qty'])
+            qty = product_list[products.index(product)]['qty']
+            if not self.calc_product(product, qty): continue
+            self.charge(product, qty)
         self.log()
     
     def calc_product(self, product, qty):
         '''Calculate the product'''
-        if product.stock <= 0:
+        if product.stock <= 0:  # calculate available products only
             # product with 0 stock is removed from the cart
             print(f'{product} is currently unavailable. Removed from the cart.')
             self.cart.remove(product)
