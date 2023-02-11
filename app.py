@@ -30,7 +30,7 @@ class Person:
                 continue
             # calculate available products only
             product.stock = product.stock - 1
-            if not self.charge(product): continue
+            self.charge(product)
         self.log()
     
     def charge(self, product):
